@@ -20,7 +20,7 @@ def create_df(search_year):
                      names=["name", "sex", "number"])
 
 def get_gender(df, gender):
-    # return either mal or female half of df
+    # return either male or female half of df
     if gender == "M":
         return df[df["sex"] == "M"]
     elif gender == "F":
@@ -38,12 +38,4 @@ def top_ten(df, gender):
 
 
 
-print(add_number_total(get_gender(create_df(1880), "F")))
-#d = create_df(1880)
-#print(np.array(d["number"]).sum())
-#print(create_df(1880)["number"].sum())
-#print(top_ten(1880, "M"))    
-#return pd.concat([women, men])
-
-#print(top_ten(2000).loc[17658])
-#print(create_df(1999).iloc[:10])
+#print(add_number_total(get_gender(create_df(1880), "F")))
