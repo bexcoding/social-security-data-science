@@ -7,11 +7,14 @@ Email: beckhv2@gmail.com
 Github: https://github.com/bexcoding
 """
 
-
+# TODO comment code, clean formatting
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+all_years = np.array(range(1880, 2022))
+WOMENS_OLD_TOP_FIVE= ["Mary", "Anna", "Emma", "Elizabeth", "Minnie"]
+MENS_OLD_TOP_FIVE = ["John", "William", "James", "Charles", "George"]
 
 def create_df(search_year):
     # creates data frame
@@ -39,14 +42,16 @@ def find_my_name(df, gender, name):
     # returns rank in gender
     # covert index to rank
     if gender == "F":
-        return (find_name(get_gender(df, "F"), name).index[0]) + 1
+        rank = (find_name(get_gender(df, "F"), name).index[0]) + 1
+        return rank
     elif gender == "M":
         men = get_gender(df, "M")
         first_male_index = men.index[0]
-        return (find_name(men, name).index[0] - first_male_index) + 1
+        rank = (find_name(men, name).index[0] - first_male_index) + 1
+        return rank
+    
 def find_name_over_time(gender, name):
     # gets rank of a name for all years
-    all_years = np.array(range(1880, 2022))
     result_list = []
     for y in all_years:
         print(f"Checking year: {y}")
@@ -61,14 +66,57 @@ def name_count(df, gender):
         return (men.last_valid_index() - men.index[0])
 def name_counts_over_time(gender):
     # get number of different names per gender for all years
-    all_years = np.array(range(1880, 2022))
     result_list = []
     for y in all_years:
         print(f"Checking year: {y}")
         result_list.append(name_count(create_df(y), gender))
     return result_list
+def plot_name_over_time(gender, name):
+    y = find_name_over_time(gender, name)
+    plt.title("Rank (Popularity) of Name Over Time")
+    plt.xlabel("Year")
+    plt.ylabel("Rank")
+    plt.plot(all_years, y)
+    plt.ylim((max(y) * 1.25) ,0)
+    plt.xlim(1880, 2021)
+    plt.show()
+def plot_women_top_five():
+    for name in WOMENS_OLD_TOP_FIVE:
+        y = find_name_over_time("F", name)
+        plt.plot(all_years, y, label=name)
+    plt.title("Rank (Popularity) of Name Over Time")
+    plt.xlabel("Year")
+    plt.ylabel("Rank")
+    plt.ylim(300 ,0)
+    plt.xlim(1880, 2021)
+    plt.legend()
+    plt.show()
 
-# TODO questions to answer
+def plot_men_top_five():
+    for name in MENS_OLD_TOP_FIVE:
+        y = find_name_over_time("M", name)
+        plt.plot(all_years, y, label=name)
+    plt.title("Rank (Popularity) of Name Over Time")
+    plt.xlabel("Year")
+    plt.ylabel("Rank")
+    plt.ylim(200 ,0)
+    plt.xlim(1880, 2021)
+    plt.legend()
+    plt.show()
+
+def plot_name_counts():
+    plt.plot(all_years, name_counts_over_time("M"), label="Male Names")
+    plt.plot(all_years, name_counts_over_time("F"), label="Female Names")
+    plt.title("Number of Different Names Over Time \n By Gender")
+    plt.xlabel("Year")
+    plt.ylabel("Number of Different Names")
+    plt.grid()
+    plt.legend()
+    plt.show()
+
+
+
+
 # What are the top ten most common boy or girl names in a particular year?
 # top_ten(create_df(search_year), gender)) -> list of names
 
@@ -83,17 +131,3 @@ def name_counts_over_time(gender):
 
 # how many different names are there in every year?
 # name_counts_over_time(gender)
-
-
-
-# how many different names are there in a given year?
-
-# how does the most common name compare to others?
-
-# Across all years, are there any boys or girls names that remain in the top x number of entries the whole time?
-
-# for each gender, what percentage did the most popular name represent out of all names in that gender?
-
-# how many names are shared for each gender over time?
-
-# assign super spy identity
