@@ -18,59 +18,82 @@ def create_df(search_year):
     # replace file directory with correct local directory
     return pd.read_csv(f"/home/nova/Downloads/names/yob{search_year}.txt", 
                      names=["name", "sex", "number"])
-
 def get_gender(df, gender):
     # return either male or female half of df
     if gender == "M":
         return df[df["sex"] == "M"]
     elif gender == "F":
         return df[df["sex"] == "F"]
-    
 def add_number_total(df):
     # add number column
     return df["number"].sum()
-
 def top_ten(df, gender):
     # create df and get top ten names for men or women
     top_ten_df = get_gender(df, gender).iloc[:10]
     return np.array(top_ten_df["name"])
-
-
 def find_name(df, search_name):
     # can find name in men and women; isolate by passing one gender
     return df[df["name"] == search_name]
-
-def find_my_name(df, search_year, gender, name):
+def find_my_name(df, gender, name):
     #indexing of men is affected by women
+    # returns rank in gender
+    # covert index to rank
     if gender == "F":
-        return find_name(get_gender(create_df(search_year), gender), name).index[0]
+        return (find_name(get_gender(df, "F"), name).index[0]) + 1
     elif gender == "M":
-        pass
+        men = get_gender(df, "M")
+        first_male_index = men.index[0]
+        return (find_name(men, name).index[0] - first_male_index) + 1
+def find_name_over_time(gender, name):
+    # gets rank of a name for all years
+    all_years = np.array(range(1880, 2022))
+    result_list = []
+    for y in all_years:
+        print(f"Checking year: {y}")
+        result_list.append(find_my_name(create_df(y), gender, name))
+    return result_list
+def name_count(df, gender):
+    # get number of different names per gender
+    if gender == "F":
+        return get_gender(df, "F").last_valid_index()
+    elif gender == "M":
+        men = get_gender(df, "M")
+        return (men.last_valid_index() - men.index[0])
+def name_counts_over_time(gender):
+    # get number of different names per gender for all years
+    all_years = np.array(range(1880, 2022))
+    result_list = []
+    for y in all_years:
+        print(f"Checking year: {y}")
+        result_list.append(name_count(create_df(y), gender))
+    return result_list
 
 # TODO questions to answer
 # What are the top ten most common boy or girl names in a particular year?
-# top_ten(create_df(search_year), gender))
+# top_ten(create_df(search_year), gender)) -> list of names
 
 # how popular was your name on your birth year?
-# find_name(get_gender(create_df(search_year), gender), search_name)
-print(find_my_name(create_df(1997), 1997, "M", "Alex"))
+# find_my_name(df, gender, name) -> int
 
-# 2. Across all years, are there any boys or girls names that remain in the top x number of entries the whole time?
-#    input: number of entries (10 = top ten names)
-#    output: true/false OR a name?
+# how has a given name's popularity increased or decreased over time?
+# find_name_over_time(gender, name) -> list of ranks
 
-# 4. given a name, how has that names popularity increased or decreased over time?
-#    in: name
-#    out: series of ranks for each data set, maybe graph
-# 5. for each gender, what percentage did the most popular name represent out of all names in that gender?
-#    in:
-#    out: percent of total share of males that had the most popular name, same for females
-# 6. how many names are shared for each gender over time?
-#    in:
-#    out: number of shared names over time, increasing or decreasing
-# 7. how many different names are in each gender, do they increase or decrease over time?
-#    in:
-#    out: number of names shared between gender per year
-# 8. assign super spy identity:
-#    in: year, gender, common vs non common name
-#    out: dob, name * 10
+# how many different names are in each gender in a given year?
+# name_count(df, gender)
+
+# how many different names are there in every year?
+# name_counts_over_time(gender)
+
+
+
+# how many different names are there in a given year?
+
+# how does the most common name compare to others?
+
+# Across all years, are there any boys or girls names that remain in the top x number of entries the whole time?
+
+# for each gender, what percentage did the most popular name represent out of all names in that gender?
+
+# how many names are shared for each gender over time?
+
+# assign super spy identity
