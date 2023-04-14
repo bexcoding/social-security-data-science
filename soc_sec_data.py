@@ -229,9 +229,10 @@ def plot_name_over_time(gender, name):
     plt.title("Rank (Popularity) of Name Over Time")
     plt.xlabel("Year")
     plt.ylabel("Rank")
-    plt.plot(ALL_YEARS, y)
+    plt.plot(ALL_YEARS, y, label=f"Name={name}")
     plt.ylim((max(y) * 1.25) ,0)
     plt.xlim(1880, 2021)
+    plt.legend()
     plt.show()
 
 
